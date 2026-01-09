@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "862790190090",
+    "project_id": "classtrack-49bbe",
+    "storage_bucket": "classtrack-49bbe.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862790190090:android:ac6fd28c4404329a8acbf3",
+        "android_client_info": {
+          "package_name": "com.dhruv.classtrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm665qj_jSP8UaoSmN3Xa-ZbgTGa5OkkY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862790190090:android:3a280ab8a2bb96728acbf3",
+        "android_client_info": {
+          "package_name": "com.example.newprpoject1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm665qj_jSP8UaoSmN3Xa-ZbgTGa5OkkY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
