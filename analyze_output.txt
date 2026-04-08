@@ -1,0 +1,195 @@
+﻿Analyzing ClassTrack...                                         
+
+warning - Unused import: 'package:firebase_storage/firebase_storage.dart' - lib\account_page.dart:7:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\account_page.dart:319:38 - deprecated_member_use
+   info - The local variable '_isUpdating' starts with an underscore - lib\account_page.dart:386:10 - no_leading_underscores_for_local_identifiers
+   info - The 'child' argument should be last in widget constructor invocations - lib\account_page.dart:433:15 - sort_child_properties_last
+   info - The 'child' argument should be last in widget constructor invocations - lib\account_page.dart:439:15 - sort_child_properties_last
+   info - Statements in an if should be enclosed in a block - lib\account_page.dart:476:27 - curly_braces_in_flow_control_structures
+   info - Don't use 'BuildContext's across async gaps - lib\account_page.dart:485:38 - use_build_context_synchronously
+   info - Statements in an if should be enclosed in a block - lib\account_page.dart:496:27 - curly_braces_in_flow_control_structures
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\account_page.dart:497:46 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\account_page.dart:505:46 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\account_page.dart:531:32 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\admin_dashboard.dart:16:9 - use_super_parameters
+   info - Don't use 'BuildContext's across async gaps - lib\admin_dashboard.dart:147:24 - use_build_context_synchronously
+   info - Parameter 'key' could be a super parameter - lib\admin_dashboard.dart:346:9 - use_super_parameters
+   info - Constructors for public widgets should have a named 'key' parameter - lib\admin_inquiry_page.dart:7:7 - use_key_in_widget_constructors
+   info - Don't use 'BuildContext's across async gaps - lib\admin_inquiry_page.dart:37:26 - use_build_context_synchronously
+   info - Statements in an if should be enclosed in a block - lib\admin_inquiry_page.dart:147:11 - curly_braces_in_flow_control_structures
+   info - Don't use 'BuildContext's across async gaps - lib\admin_inquiry_page.dart:170:7 - use_build_context_synchronously
+   info - Statements in an if should be enclosed in a block - lib\admin_inquiry_page.dart:192:11 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\admin_inquiry_page.dart:194:11 - curly_braces_in_flow_control_structures
+   info - Constructors for public widgets should have a named 'key' parameter - lib\admin_login_page.dart:8:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\admin_login_page.dart:10:3 - library_private_types_in_public_api
+   info - Don't invoke 'print' in production code - lib\admin_login_page.dart:62:7 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\admin_login_page.dart:91:13 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_login_page.dart:151:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_login_page.dart:152:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_login_page.dart:159:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_login_page.dart:168:46 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\admin_login_page.dart:195:27 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\admin_login_page.dart:197:27 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_login_page.dart:216:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_login_page.dart:232:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_login_page.dart:283:55 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_login_page.dart:284:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_login_page.dart:299:37 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\admin_setting.dart:7:9 - use_super_parameters
+   info - The private field _appVersion could be 'final' - lib\admin_setting.dart:16:10 - prefer_final_fields
+   info - Parameter 'key' could be a super parameter - lib\admin_study_material_page.dart:8:9 - use_super_parameters
+   info - Don't use 'BuildContext's across async gaps - lib\admin_study_material_page.dart:43:29 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\admin_study_material_page.dart:44:36 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\admin_study_material_page.dart:151:29 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\admin_study_material_page.dart:152:36 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_study_material_page.dart:200:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_study_material_page.dart:207:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_study_material_page.dart:218:41 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\admin_study_material_page.dart:284:21 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\admin_study_material_page.dart:286:21 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_study_material_page.dart:329:57 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\admin_study_material_page.dart:360:66 - deprecated_member_use
+   info - Constructors for public widgets should have a named 'key' parameter - lib\calendar_page.dart:9:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\calendar_page.dart:11:3 - library_private_types_in_public_api
+   info - The 'child' argument should be last in widget constructor invocations - lib\calendar_page.dart:219:11 - sort_child_properties_last
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\calendar_service.dart:25:22 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\calendar_service.dart:33:48 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\calendar_service.dart:77:39 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\calendar_service.dart:90:58 - deprecated_member_use
+   info - Constructors for public widgets should have a named 'key' parameter - lib\categories_page.dart:8:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\categories_page.dart:10:3 - library_private_types_in_public_api
+   info - The 'child' argument should be last in widget constructor invocations - lib\categories_page.dart:79:26 - sort_child_properties_last
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\categories_page.dart:160:42 - use_build_context_synchronously
+   info - Parameter 'key' could be a super parameter - lib\communications_page.dart:11:9 - use_super_parameters
+   info - Statements in an if should be enclosed in a block - lib\communications_page.dart:44:9 - curly_braces_in_flow_control_structures
+   info - Don't use 'BuildContext's across async gaps - lib\communications_page.dart:45:45 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\communications_page.dart:46:28 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\communications_page.dart:59:28 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\communications_page.dart:106:40 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\communications_page.dart:258:42 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps - lib\communications_page.dart:290:44 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\communications_page.dart:332:40 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\communications_page.dart:404:19 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\communications_page.dart:406:19 - curly_braces_in_flow_control_structures
+   info - Constructors for public widgets should have a named 'key' parameter - lib\event_editor_page.dart:10:3 - use_key_in_widget_constructors
+   info - Constructors in '@immutable' classes should be declared as 'const' - lib\event_editor_page.dart:10:3 - prefer_const_constructors_in_immutables
+   info - Invalid use of a private type in a public API - lib\event_editor_page.dart:13:3 - library_private_types_in_public_api
+   info - Don't use 'BuildContext's across async gaps - lib\event_editor_page.dart:83:18 - use_build_context_synchronously
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\event_editor_page.dart:132:15 - deprecated_member_use
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\event_editor_page.dart:164:15 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\event_editor_page.dart:165:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\event_editor_page.dart:167:52 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\exam_planner.dart:7:9 - use_super_parameters
+   info - Statements in an if should be enclosed in a block - lib\exam_planner.dart:176:11 - curly_braces_in_flow_control_structures
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\exam_planner.dart:320:23 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\exam_planner.dart:385:52 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\exam_planner.dart:536:26 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\exam_planner.dart:540:29 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\exam_planner.dart:544:28 - deprecated_member_use
+   info - Invalid use of a private type in a public API - lib\home_screen.dart:35:3 - library_private_types_in_public_api
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\home_screen.dart:867:22 - deprecated_member_use
+   info - Constructors for public widgets should have a named 'key' parameter - lib\login.dart:13:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\login.dart:15:3 - library_private_types_in_public_api
+   info - Don't use 'BuildContext's across async gaps - lib\login.dart:87:13 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:146:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:147:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:154:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:163:46 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\login.dart:190:27 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\login.dart:192:27 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\login.dart:205:27 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\login.dart:207:27 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:215:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:231:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:266:55 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:280:49 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:343:55 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:344:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\login.dart:359:37 - deprecated_member_use
+   info - Constructors for public widgets should have a named 'key' parameter - lib\main.dart:50:7 - use_key_in_widget_constructors
+   info - Constructors for public widgets should have a named 'key' parameter - lib\main.dart:72:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\main.dart:74:3 - library_private_types_in_public_api
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\main.dart:313:42 - deprecated_member_use
+   info - Invalid use of a private type in a public API - lib\note_editor_page.dart:21:3 - library_private_types_in_public_api
+   info - Constructors for public widgets should have a named 'key' parameter - lib\notes_list_page.dart:11:3 - use_key_in_widget_constructors
+   info - Constructors in '@immutable' classes should be declared as 'const' - lib\notes_list_page.dart:11:3 - prefer_const_constructors_in_immutables
+   info - Invalid use of a private type in a public API - lib\notes_list_page.dart:14:3 - library_private_types_in_public_api
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\notes_list_page.dart:135:42 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\notes_list_page.dart:180:48 - use_build_context_synchronously
+   info - Parameter 'key' could be a super parameter - lib\pomodoro_page.dart:108:9 - use_super_parameters
+   info - Invalid use of a private type in a public API - lib\pomodoro_page.dart:111:3 - library_private_types_in_public_api
+   info - Statements in an if should be enclosed in a block - lib\pomodoro_page.dart:132:7 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\pomodoro_page.dart:134:7 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\pomodoro_page.dart:136:7 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\pomodoro_page.dart:138:7 - curly_braces_in_flow_control_structures
+   info - Unnecessary use of multiple underscores - lib\pomodoro_page.dart:344:43 - unnecessary_underscores
+   info - Constructors for public widgets should have a named 'key' parameter - lib\settings_page.dart:5:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\settings_page.dart:7:3 - library_private_types_in_public_api
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\settings_page.dart:71:7 - deprecated_member_use
+   info - Constructors for public widgets should have a named 'key' parameter - lib\signup_screen.dart:10:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\signup_screen.dart:12:3 - library_private_types_in_public_api
+   info - Don't use 'BuildContext's across async gaps - lib\signup_screen.dart:49:11 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:102:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:103:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:110:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:119:40 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\signup_screen.dart:165:21 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\signup_screen.dart:179:21 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:185:45 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\signup_screen.dart:200:21 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\signup_screen.dart:202:21 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:210:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:226:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:274:55 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:275:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\signup_screen.dart:290:37 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\students_page.dart:9:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\students_page.dart:50:45 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\students_page.dart:68:19 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\students_page.dart:75:19 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\students_page.dart:77:19 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\students_page.dart:92:19 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\students_page.dart:209:35 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\study_material_page.dart:13:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\study_material_page.dart:44:37 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\study_material_page.dart:77:13 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\study_material_page.dart:79:13 - curly_braces_in_flow_control_structures
+   info - Unnecessary use of 'toList' in a spread - lib\study_material_page.dart:99:70 - unnecessary_to_list_in_spreads
+   info - Constructors for public widgets should have a named 'key' parameter - lib\support_page.dart:5:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\support_page.dart:7:3 - library_private_types_in_public_api
+   info - Constructors for public widgets should have a named 'key' parameter - lib\todo_list_page.dart:8:7 - use_key_in_widget_constructors
+   info - Invalid use of a private type in a public API - lib\todo_list_page.dart:10:3 - library_private_types_in_public_api
+   info - Don't use 'BuildContext's across async gaps - lib\todo_list_page.dart:29:20 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\todo_list_page.dart:46:58 - deprecated_member_use
+   info - The 'child' argument should be last in widget constructor invocations - lib\todo_list_page.dart:63:13 - sort_child_properties_last
+   info - Don't use 'BuildContext's across async gaps - lib\todo_list_page.dart:156:42 - use_build_context_synchronously
+   info - The 'child' argument should be last in widget constructor invocations - lib\todo_list_page.dart:230:9 - sort_child_properties_last
+   info - Parameter 'key' could be a super parameter - lib\upload_study_material_page.dart:7:9 - use_super_parameters
+   info - Don't use 'BuildContext's across async gaps - lib\upload_study_material_page.dart:38:45 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\upload_study_material_page.dart:39:28 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\upload_study_material_page.dart:46:21 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\upload_study_material_page.dart:48:28 - use_build_context_synchronously
+   info - Parameter 'key' could be a super parameter - lib\user_analytics_page.dart:16:9 - use_super_parameters
+   info - Statements in an if should be enclosed in a block - lib\user_analytics_page.dart:43:13 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\user_analytics_page.dart:128:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\user_analytics_page.dart:351:22 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\user_analytics_page.dart:353:41 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\user_analytics_page.dart:392:11 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\user_analytics_page.dart:449:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\user_analytics_page.dart:492:28 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\user_analytics_page.dart:494:47 - deprecated_member_use
+
+flutter : 178 issues found. (ran 
+in 2.0s)
+At line:1 char:1
++ flutter analyze 2>&1 | Out-File 
+-FilePath 
+C:\Users\Dhruv\OneDrive\Doc ...
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotS 
+   pecified: (178 issues found. (  
+  ran in 2.0s):String) [], Remot   
+ eException
+    + FullyQualifiedErrorId : Nati 
+   veCommandError
+ 

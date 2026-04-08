@@ -2,12 +2,20 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'home_screen.dart';
+import 'auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
+import 'todo_service.dart';
+import 'calendar_service.dart';
+import 'exam_planner_service.dart';
 
 // ----------------------------------------------------------
 // 📌 REQUIRED: FCM Background Message Handler
@@ -15,21 +23,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  print("🔔 Background Message: ${message.notification?.title}");
 }
 
 // ----------------------------------------------------------
 // 📌 Local Notifications Plugin
 // ----------------------------------------------------------
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Register background handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -46,34 +51,18 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Color kDarkNavy = const Color(0xFF1B365D);
-    final Color kAccentBlue = const Color(0xFF1F3C88);
-    final Color kLightBeige = const Color(0xFFFDF8F4);
-    final Color kOffWhite = const Color(0xFFFFFFFF);
-    final Color kDarkGrayText = const Color(0xFF444444);
-
-    return MaterialApp(
-      title: 'ClassTrack',
-      theme: ThemeData(
-        primaryColor: kDarkNavy,
-        scaffoldBackgroundColor: kLightBeige,
-        colorScheme: ColorScheme.light(
-          primary: kDarkNavy,
-          secondary: kAccentBlue,
-          background: kOffWhite,
-          surface: kOffWhite,
-          onPrimary: Colors.white,
-          onSecondary: Colors.white,
-          onSurface: kDarkGrayText,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1B365D),
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
+    return ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, _) {
+          return MaterialApp(
+            title: 'ClassTrack',
+            theme: themeProvider.themeData,
+            debugShowCheckedModeBanner: false,
+            home: SplashScreen(),
+          );
+        },
       ),
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
     );
   }
 }
@@ -96,10 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   late AnimationController _particlesController;
 
-  final Color kDarkNavy = const Color(0xFF1B365D);
-  final Color kAccentBlue = const Color(0xFF1F3C88);
-  final Color kLightBeige = const Color(0xFFFDF8F4);
-  final Color kOffWhite = const Color(0xFFFFFFFF);
+  // Splash colors will be read from ThemeProvider in build()
 
   final int particleCount = 20;
   final Random random = Random();
@@ -143,21 +129,48 @@ class _SplashScreenState extends State<SplashScreen>
 
     particlePositions = List.generate(
       particleCount,
-          (index) => Offset(
+      (index) => Offset(
         random.nextDouble() * 300 - 150,
         random.nextDouble() * 300 - 150,
       ),
     );
 
-    particleSizes =
-        List.generate(particleCount, (index) => random.nextDouble() * 4 + 2);
+    particleSizes = List.generate(
+      particleCount,
+      (index) => random.nextDouble() * 4 + 2,
+    );
 
-    // After animation → go to Login Page
-    Timer(const Duration(milliseconds: 3500), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => StudentLoginPage()),
-      );
+    // After animation → check auth state and navigate
+    Timer(const Duration(milliseconds: 3500), () async {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        // Already logged in — fetch user data and go to HomeScreen
+        final authService = AuthService();
+        final userData = await authService.getUserData();
+        if (userData != null && mounted) {
+          ToDoService().setUser(user.uid);
+          CalendarService().setUser(user.uid);
+          ExamPlannerService().setUser(user.uid);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(
+                name: userData['name'] ?? 'User',
+                enrollment: userData['enrollment'] ?? 'N/A',
+                email: userData['email'] ?? 'No email',
+              ),
+            ),
+          );
+          return;
+        }
+      }
+      // Not logged in — go to Login
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => StudentLoginPage()),
+        );
+      }
     });
   }
 
@@ -168,32 +181,21 @@ class _SplashScreenState extends State<SplashScreen>
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     // Ask permission
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-    print("🔔 Permission: ${settings.authorizationStatus}");
+    await messaging.requestPermission(alert: true, badge: true, sound: true);
 
     // Get FCM token
     String? token = await messaging.getToken();
-    print("📱 FCM Token: $token");
 
     // Save token to Firestore
     if (token != null) {
       await FirebaseFirestore.instance
           .collection("users_tokens")
           .doc(token)
-          .set({
-        "token": token,
-        "timestamp": FieldValue.serverTimestamp(),
-      });
+          .set({"token": token, "timestamp": FieldValue.serverTimestamp()});
     }
 
     // Foreground notifications
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("📩 Foreground message received!");
-
       flutterLocalNotificationsPlugin.show(
         message.hashCode,
         message.notification?.title ?? "New Message",
@@ -226,10 +228,11 @@ class _SplashScreenState extends State<SplashScreen>
     double logoSize = 180;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF9F3EF),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [kOffWhite, kLightBeige],
+            colors: [Colors.white, Color(0xFFF9F3EF)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -245,43 +248,48 @@ class _SplashScreenState extends State<SplashScreen>
                     particlePositions,
                     particleSizes,
                     _particlesController.value,
-                    kAccentBlue,
+                    const Color(0xFF1B3C53),
                   ),
                   size: Size(logoSize * 3, logoSize * 3),
                 );
               },
             ),
 
-            // Logo
-            ScaleTransition(
-              scale: _scaleAnimation,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: SizedBox(
-                  width: logoSize,
-                  height: logoSize,
-                  child: Image.asset(
-                    'images/appphoto3.png',
-                    fit: BoxFit.cover,
+            // Centered Logo + App Name
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Logo
+                ScaleTransition(
+                  scale: _scaleAnimation,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: SizedBox(
+                      width: logoSize,
+                      height: logoSize,
+                      child: Image.asset(
+                        'images/appphoto3.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
 
-            // App Name
-            Positioned(
-              bottom: 120,
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: Text(
-                  "ClassTrack",
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700,
-                    color: kDarkNavy,
+                const SizedBox(height: 24),
+
+                // App Name
+                FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Text(
+                    "ClassTrack",
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF1B3C53),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ],
         ),
@@ -310,7 +318,8 @@ class _ParticlesPainter extends CustomPainter {
       double angle = 2 * pi * progress + i;
       double radius = 50 + i * 5;
 
-      Offset offset = center +
+      Offset offset =
+          center +
           Offset(
             cos(angle) * radius + positions[i].dx,
             sin(angle) * radius + positions[i].dy,

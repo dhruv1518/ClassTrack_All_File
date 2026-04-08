@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
 import 'calendar_service.dart';
 import 'event_editor_page.dart';
 
@@ -14,26 +16,20 @@ class _CalendarPageState extends State<CalendarPage> {
   late DateTime _focusedDay;
   late DateTime _selectedDay;
 
-  // 🎨 Palette from your UI image
-  final Color kMainBackground = const Color(0xFFFAF6F2); // page bg
-  final Color kCardBackground = const Color(0xFFF5EFEA); // card beige
-  final Color kCardHighlight = const Color(0xFFEAE2DC); // beige gradient stop
-  final Color kPrimaryText = const Color(0xFF1D2B36); // dark titles
-  final Color kSecondaryText = const Color(0xFF6D7B85); // gray-blue subtitles
-  final Color kIcon = const Color(0xFF2E4057); // navy icons
-  final Color kInactive = const Color(0xFF8D99A6); // inactive gray
-  final Color kFabStart = const Color(0xFF2C3E50); // FAB gradient start
-  final Color kFabEnd = const Color(0xFF496D91); // FAB gradient end
-
   @override
   void initState() {
     super.initState();
     _focusedDay = DateTime.now();
     _selectedDay = _focusedDay;
+    _calendarService.fetchEvents().then((_) {
+      if (mounted) setState(() {});
+    });
   }
 
   List<CalendarEvent> _getEventsForDay(DateTime day) {
-    return _calendarService.events.where((event) => isSameDay(event.date, day)).toList();
+    return _calendarService.events
+        .where((event) => isSameDay(event.date, day))
+        .toList();
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -47,24 +43,20 @@ class _CalendarPageState extends State<CalendarPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete Event?', style: TextStyle(color: kPrimaryText)),
-        content: Text(
-          'Are you sure you want to delete "${event.title}"?',
-          style: TextStyle(color: kSecondaryText),
-        ),
+        title: Text('Delete Event?'),
+        content: Text('Are you sure you want to delete "${event.title}"?'),
         actions: [
           TextButton(
-            child: Text('Cancel', style: TextStyle(color: kInactive)),
+            child: Text('Cancel'),
             onPressed: () => Navigator.of(context).pop(),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: Text('Delete', style: TextStyle(color: Colors.white)),
-            onPressed: () {
-              setState(() {
-                _calendarService.events.removeWhere((e) => e.id == event.id);
-              });
+            onPressed: () async {
               Navigator.of(context).pop();
+              await _calendarService.deleteEvent(event.id);
+              if (mounted) setState(() {});
             },
           ),
         ],
@@ -74,19 +66,21 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    final tp = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
-      backgroundColor: kMainBackground,
+      backgroundColor: tp.scaffoldBg,
       appBar: AppBar(
         title: Text(
           'Calendar',
-          style: TextStyle(color: kPrimaryText, fontWeight: FontWeight.bold),
+          style: TextStyle(color: tp.primaryText, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: kMainBackground,
+        backgroundColor: tp.scaffoldBg,
         elevation: 0,
-        iconTheme: IconThemeData(color: kIcon),
+        iconTheme: IconThemeData(color: tp.iconColor),
         actions: [
           IconButton(
-            icon: Icon(Icons.today, color: kIcon),
+            icon: Icon(Icons.today, color: tp.iconColor),
             onPressed: () {
               setState(() {
                 _focusedDay = DateTime.now();
@@ -107,81 +101,96 @@ class _CalendarPageState extends State<CalendarPage> {
             eventLoader: _getEventsForDay,
             calendarStyle: CalendarStyle(
               todayDecoration: BoxDecoration(
-                color: kIcon,
+                color: tp.iconColor,
                 shape: BoxShape.circle,
               ),
               selectedDecoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [kFabStart, kFabEnd],
+                  colors: [tp.gradientStart, tp.gradientEnd],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 shape: BoxShape.circle,
               ),
-              defaultTextStyle: TextStyle(color: kPrimaryText),
-              weekendTextStyle: TextStyle(color: kSecondaryText),
+              defaultTextStyle: TextStyle(color: tp.primaryText),
+              weekendTextStyle: TextStyle(color: tp.secondaryText),
             ),
             headerStyle: HeaderStyle(
               formatButtonVisible: false,
               titleCentered: true,
               titleTextStyle: TextStyle(
-                color: kPrimaryText,
+                color: tp.primaryText,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
-              leftChevronIcon: Icon(Icons.chevron_left, color: kIcon),
-              rightChevronIcon: Icon(Icons.chevron_right, color: kIcon),
+              leftChevronIcon: Icon(Icons.chevron_left, color: tp.iconColor),
+              rightChevronIcon: Icon(Icons.chevron_right, color: tp.iconColor),
             ),
           ),
           const SizedBox(height: 8.0),
           Expanded(
-            child: ListView.builder(
-              itemCount: _getEventsForDay(_selectedDay).length,
-              itemBuilder: (context, index) {
-                final event = _getEventsForDay(_selectedDay)[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [kCardBackground, kCardHighlight],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+            child: Builder(
+              builder: (context) {
+                final selectedDayEvents = _getEventsForDay(_selectedDay);
+                return ListView.builder(
+                  itemCount: selectedDayEvents.length,
+                  itemBuilder: (context, index) {
+                    final event = selectedDayEvents[index];
+                    return Card(
+                      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
                       ),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: event.category.color,
-                        child: event.hasReminder
-                            ? Icon(Icons.notifications, color: Colors.white, size: 16)
-                            : null,
-                      ),
-                      title: Text(event.title, style: TextStyle(color: kPrimaryText)),
-                      subtitle: Text(
-                        DateFormat.jm().format(event.date),
-                        style: TextStyle(color: kSecondaryText),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete_outline, color: Colors.red[700]),
-                        onPressed: () => _showDeleteConfirmation(event),
-                      ),
-                      onTap: () async {
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => EventEditorPage(
-                              selectedDate: _selectedDay,
-                              event: event,
-                            ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [tp.cardBg, tp.cardHighlight],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
-                        );
-                        setState(() {});
-                      },
-                    ),
-                  ),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: event.category.color,
+                            child: event.hasReminder
+                                ? Icon(
+                                    Icons.notifications,
+                                    color: Colors.white,
+                                    size: 16,
+                                  )
+                                : null,
+                          ),
+                          title: Text(
+                            event.title,
+                            style: TextStyle(color: tp.primaryText),
+                          ),
+                          subtitle: Text(
+                            DateFormat.jm().format(event.date),
+                            style: TextStyle(color: tp.secondaryText),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.delete_outline,
+                              color: tp.accentCoral,
+                            ),
+                            onPressed: () => _showDeleteConfirmation(event),
+                          ),
+                          onTap: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => EventEditorPage(
+                                  selectedDate: _selectedDay,
+                                  event: event,
+                                ),
+                              ),
+                            );
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -191,7 +200,7 @@ class _CalendarPageState extends State<CalendarPage> {
       floatingActionButton: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [kFabStart, kFabEnd],
+            colors: [tp.gradientStart, tp.gradientEnd],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -201,12 +210,13 @@ class _CalendarPageState extends State<CalendarPage> {
           onPressed: () async {
             await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => EventEditorPage(selectedDate: _selectedDay),
+                builder: (context) =>
+                    EventEditorPage(selectedDate: _selectedDay),
               ),
             );
             setState(() {});
           },
-          child: Icon(Icons.add, color: kMainBackground),
+          child: Icon(Icons.add, color: tp.scaffoldBg),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),

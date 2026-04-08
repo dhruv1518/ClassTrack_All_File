@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // <-- Added for Firestore
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
 import 'home_screen.dart';
 import 'signup_screen.dart';
 import 'admin_login_page.dart';
 import 'auth_service.dart';
-import 'todo_service.dart'; // <-- Added for ToDoService
+import 'todo_service.dart';
+import 'calendar_service.dart';
+import 'exam_planner_service.dart';
+import 'analytics_service.dart';
 
 class StudentLoginPage extends StatefulWidget {
   @override
@@ -15,14 +20,8 @@ class _StudentLoginPageState extends State<StudentLoginPage>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final AuthService _authService = AuthService();
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  final Color kDarkBlue = const Color(0xFF1B3C53);
-  final Color kBlueGray = const Color(0xFF456882);
-  final Color kBeige = const Color(0xFFC1B6F9);
-  final Color kCream = const Color(0xFFF3EFEC);
 
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -35,11 +34,18 @@ class _StudentLoginPageState extends State<StudentLoginPage>
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
-    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _controller.forward();
   }
 
@@ -57,36 +63,32 @@ class _StudentLoginPageState extends State<StudentLoginPage>
         _isLoading = true;
         _errorMessage = '';
       });
-
       String? result = await _authService.signIn(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
       setState(() {
         _isLoading = false;
       });
 
       if (result == null) {
-        // Successful login
         Map<String, dynamic>? userData = await _authService.getUserData();
         if (userData != null) {
-          // Store user info in ToDoService
-          ToDoService().setUser(userData['email']);
-
-          // ✅ Log user activity into Firestore
+          ToDoService().setUser(_authService.currentUser!.uid);
+          CalendarService().setUser(_authService.currentUser!.uid);
+          ExamPlannerService().setUser(_authService.currentUser!.uid);
           await FirebaseFirestore.instance.collection('user_activity').add({
             'email': userData['email'],
             'name': userData['name'] ?? 'Unknown User',
             'action': 'Logged In',
             'timestamp': FieldValue.serverTimestamp(),
           });
-
-          // Navigate to Home
+          final uid = _authService.currentUser?.uid;
+          if (uid != null) await AnalyticsService.trackLogin(uid);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomeScreen(
+              builder: (_) => HomeScreen(
                 name: userData['name'] ?? 'User',
                 enrollment: userData['enrollment'] ?? 'N/A',
                 email: userData['email'] ?? 'No email',
@@ -104,8 +106,9 @@ class _StudentLoginPageState extends State<StudentLoginPage>
 
   @override
   Widget build(BuildContext context) {
+    final tp = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      backgroundColor: kCream,
+      backgroundColor: const Color(0xFFF9F3EF),
       appBar: AppBar(
         title: const Text(
           "Student Login",
@@ -116,7 +119,7 @@ class _StudentLoginPageState extends State<StudentLoginPage>
             letterSpacing: 0.5,
           ),
         ),
-        backgroundColor: kDarkBlue,
+        backgroundColor: const Color(0xFF1B3C53),
         centerTitle: true,
         elevation: 4,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -142,15 +145,15 @@ class _StudentLoginPageState extends State<StudentLoginPage>
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
                             colors: [
-                              kBlueGray.withOpacity(0.75),
-                              kBeige.withOpacity(0.9),
+                              const Color(0xFF496D91).withOpacity(0.75),
+                              const Color(0xFFD2C1B6).withOpacity(0.9),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: kDarkBlue.withOpacity(0.25),
+                              color: const Color(0xFF1B3C53).withOpacity(0.25),
                               offset: const Offset(0, 6),
                               blurRadius: 20,
                             ),
@@ -159,7 +162,7 @@ class _StudentLoginPageState extends State<StudentLoginPage>
                         child: Icon(
                           Icons.school,
                           size: 60,
-                          color: kDarkBlue.withOpacity(0.85),
+                          color: const Color(0xFF1B3C53).withOpacity(0.85),
                         ),
                       ),
                     ),
@@ -179,33 +182,31 @@ class _StudentLoginPageState extends State<StudentLoginPage>
                         ),
                       ),
                     _buildTextField(
+                      tp: tp,
                       controller: emailController,
                       label: "Email",
                       icon: Icons.email,
                       keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
+                      validator: (v) {
+                        if (v == null || v.isEmpty)
                           return "Please enter your email";
-                        }
-                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v))
                           return "Enter a valid email";
-                        }
                         return null;
                       },
                     ),
                     const SizedBox(height: 18),
                     _buildTextField(
+                      tp: tp,
                       controller: passwordController,
                       label: "Password",
                       icon: Icons.lock,
                       obscureText: _obscurePassword,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
+                      validator: (v) {
+                        if (v == null || v.isEmpty)
                           return "Please enter your password";
-                        }
-                        if (value.length < 6) {
+                        if (v.length < 6)
                           return "Password must be at least 6 characters";
-                        }
                         return null;
                       },
                       suffixIcon: IconButton(
@@ -213,41 +214,40 @@ class _StudentLoginPageState extends State<StudentLoginPage>
                           _obscurePassword
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: kBlueGray.withOpacity(0.65),
+                          color: const Color(0xFF496D91).withOpacity(0.65),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+                        onPressed: () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 28),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: kDarkBlue,
+                        backgroundColor: const Color(0xFF1B3C53),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                         elevation: 6,
-                        shadowColor: kDarkBlue.withOpacity(0.4),
+                        shadowColor: const Color(0xFF1B3C53).withOpacity(0.4),
                       ),
                       onPressed: _isLoading ? null : _login,
                       child: _isLoading
                           ? CircularProgressIndicator(
-                        valueColor:
-                        AlwaysStoppedAnimation<Color>(kCream),
-                      )
-                          : Text(
-                        "Login",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: kCream,
-                          letterSpacing: 0.8,
-                        ),
-                      ),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                const Color(0xFFF9F3EF),
+                              ),
+                            )
+                          : const Text(
+                              "Login",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
                     ),
                     const SizedBox(height: 20),
                     Row(
@@ -255,20 +255,17 @@ class _StudentLoginPageState extends State<StudentLoginPage>
                       children: [
                         Text(
                           "Don't have an account?",
-                          style: TextStyle(color: kDarkBlue, fontSize: 15),
+                          style: TextStyle(color: const Color(0xFF1B3C53), fontSize: 15),
                         ),
                         TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignUpScreen()),
-                            );
-                          },
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => SignUpScreen()),
+                          ),
                           child: Text(
                             "Sign Up",
                             style: TextStyle(
-                              color: kBlueGray.withOpacity(0.85),
+                              color: const Color(0xFF496D91).withOpacity(0.85),
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                               letterSpacing: 0.5,
@@ -282,7 +279,7 @@ class _StudentLoginPageState extends State<StudentLoginPage>
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: kDarkBlue.withOpacity(0.3),
+                          color: const Color(0xFF1B3C53).withOpacity(0.3),
                           width: 1.5,
                         ),
                       ),
@@ -295,25 +292,22 @@ class _StudentLoginPageState extends State<StudentLoginPage>
                         ),
                         icon: Icon(
                           Icons.admin_panel_settings,
-                          color: kDarkBlue,
+                          color: const Color(0xFF1B3C53),
                           size: 20,
                         ),
                         label: Text(
                           "Admin Login",
                           style: TextStyle(
-                            color: kDarkBlue,
+                            color: const Color(0xFF1B3C53),
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             letterSpacing: 0.5,
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AdminLoginPage()),
-                          );
-                        },
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => AdminLoginPage()),
+                        ),
                       ),
                     ),
                   ],
@@ -327,6 +321,7 @@ class _StudentLoginPageState extends State<StudentLoginPage>
   }
 
   Widget _buildTextField({
+    required ThemeProvider tp,
     required TextEditingController controller,
     required String label,
     required IconData icon,
@@ -341,27 +336,31 @@ class _StudentLoginPageState extends State<StudentLoginPage>
       validator: validator,
       obscureText: obscureText,
       style: TextStyle(
-          color: kDarkBlue, fontSize: 16, fontWeight: FontWeight.w500),
+        color: const Color(0xFF1B3C53),
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: kBlueGray.withOpacity(0.75)),
-        prefixIcon: Icon(
-          icon,
-          color: kBlueGray.withOpacity(0.65),
-        ),
+        labelStyle: TextStyle(color: const Color(0xFF496D91).withOpacity(0.75)),
+        prefixIcon: Icon(icon, color: const Color(0xFF496D91).withOpacity(0.65)),
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: Colors.white,
-        contentPadding:
-        const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 20,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide:
-          BorderSide(color: kBlueGray.withOpacity(0.6), width: 1.5),
+          borderSide: BorderSide(
+            color: const Color(0xFF496D91).withOpacity(0.6),
+            width: 1.5,
+          ),
         ),
       ),
     );

@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
 import 'notes_service.dart';
+import 'analytics_service.dart';
 
 class NoteEditorPage extends StatefulWidget {
   final Note note;
+  final String categoryId;
+  final bool isNewNote;
 
-  const NoteEditorPage({required this.note, Key? key}) : super(key: key);
+  const NoteEditorPage({
+    required this.note,
+    required this.categoryId,
+    this.isNewNote = false,
+    super.key,
+  });
 
   @override
   _NoteEditorPageState createState() => _NoteEditorPageState();
@@ -13,6 +24,8 @@ class NoteEditorPage extends StatefulWidget {
 class _NoteEditorPageState extends State<NoteEditorPage> {
   late TextEditingController _titleController;
   late TextEditingController _contentController;
+  final NotesService _notesService = NotesService();
+  bool _hasTrackedCreation = false;
 
   @override
   void initState() {
@@ -28,25 +41,34 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
     super.dispose();
   }
 
-  void _saveNote() {
-    setState(() {
-      widget.note.title = _titleController.text;
-      widget.note.content = _contentController.text;
-      widget.note.lastModified = DateTime.now();
-    });
+  Future<void> _saveNote() async {
+    widget.note.title = _titleController.text;
+    widget.note.content = _contentController.text;
+
+    await _notesService.updateNote(widget.categoryId, widget.note);
+
+    // 📊 Track note creation (only once for new notes)
+    if (widget.isNewNote && !_hasTrackedCreation) {
+      _hasTrackedCreation = true;
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid != null) {
+        AnalyticsService.trackNoteCreated(uid);
+      }
+    }
+
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final tp = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F4F1), // Beige background
+      backgroundColor: tp.scaffoldBg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A5F), // Navy
-        title: const Text(
-          "Edit Note",
-          style: TextStyle(color: Colors.white),
-        ),
+        backgroundColor: tp.appBarBg,
+        title: const Text("Edit Note", style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
         actions: [
@@ -65,17 +87,18 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
               controller: _titleController,
               decoration: InputDecoration(
                 hintText: "Title",
+                hintStyle: TextStyle(color: tp.inactiveColor),
                 filled: true,
-                fillColor: const Color(0xFFE8DCD2), // Sand beige
+                fillColor: tp.cardHighlight,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
               ),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1E3A5F), // Navy
+                color: tp.primaryText,
               ),
             ),
             const SizedBox(height: 16),
@@ -84,22 +107,20 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
             Expanded(
               child: TextField(
                 controller: _contentController,
-                maxLines: null, // allow multiline, but no expands!
+                maxLines: null,
                 decoration: InputDecoration(
                   hintText: "Write your note here...",
-                  alignLabelWithHint: true, // ensures alignment stays top left
+                  hintStyle: TextStyle(color: tp.inactiveColor),
+                  alignLabelWithHint: true,
                   filled: true,
-                  fillColor: const Color(0xFFE8DCD2), // Sand beige
+                  fillColor: tp.cardHighlight,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
                 ),
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-                textAlign: TextAlign.start, // top-left by default
+                style: TextStyle(fontSize: 16, color: tp.primaryText),
+                textAlign: TextAlign.start,
               ),
             ),
           ],
